@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Winson Wu // Portfolio</title>
+    <!-- Google Fonts: Outfit for sleek typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #091220 0%, #0e1e38 50%, #172a45 100%);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-glow: rgba(59, 130, 246, 0.15);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-color: #3b82f6; /* Eye-friendly Blue */
+            --accent-gradient: linear-gradient(135deg, #3b82f6, #60a5fa);
+            
+            --transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Light Mode Variables toggled via body class */
+        body.light {
+            --bg-gradient: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #cbd5e1 100%);
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(15, 23, 42, 0.06);
+            --glass-glow: rgba(59, 130, 246, 0.06);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --accent-color: #2563eb;
+            --accent-gradient: linear-gradient(135deg, #2563eb, #3b82f6);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            font-family: 'Outfit', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            overflow-x: hidden;
+            transition: background 0.5s ease, color 0.5s ease;
+        }
+
+        /* Floating background shapes for extra depth in dark mode */
+        .bg-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            transition: opacity 0.5s ease;
+        }
+
+        body.light .shape {
+            opacity: 0.06;
+        }
+
+        .shape-1 {
+            top: 20%;
+            left: 15%;
+            width: 300px;
+            height: 300px;
+            background: #3b82f6;
+            animation: float 8s ease-in-out infinite alternate;
+        }
+
+        .shape-2 {
+            bottom: 20%;
+            right: 15%;
+            width: 350px;
+            height: 350px;
+            background: #60a5fa;
+            animation: float 10s ease-in-out infinite alternate-reverse;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) scale(1); }
+            100% { transform: translateY(20px) scale(1.1); }
+        }
+
+        /* Theme Switcher Button */
+        .theme-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 10px 18px;
+            border-radius: 100px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-weight: 500;
+            font-size: 0.85rem;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            transition: var(--transition);
+        }
+
+        .theme-btn:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-color);
+            box-shadow: 0 8px 20px var(--glass-glow);
+        }
+
+        /* Glassmorphism Card Container */
+        .glass-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            width: 100%;
+            max-width: 540px;
+            padding: 40px;
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2), 0 0 100px var(--glass-glow);
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: loadReveal 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: background 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
+        }
+
+        @keyframes loadReveal {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Profile Header */
+        .avatar-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin-bottom: 24px;
+        }
+
+        .profile-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--text-primary);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            background: var(--accent-gradient); /* fallback gradient */
+        }
+
+        .avatar-glow {
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border-radius: 50%;
+            background: var(--accent-gradient);
+            z-index: -1;
+            opacity: 0.4;
+            filter: blur(8px);
+            animation: pulse 3s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.98); opacity: 0.3; }
+            100% { transform: scale(1.05); opacity: 0.6; }
+        }
+
+        .name {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            margin-bottom: 8px;
+            background: linear-gradient(to right, var(--text-primary), var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        body.light .name {
+            background: none;
+            -webkit-text-fill-color: initial;
+            color: var(--text-primary);
+        }
+
+        .tagline {
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        /* Social Links */
+        .social-row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 36px;
+        }
+
+        .social-link {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 1.2rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        body.light .social-link {
+            background: rgba(0, 0, 0, 0.03);
+        }
+
+        .social-link:hover,
+        .social-link:focus-visible {
+            transform: translateY(-4px) scale(1.1);
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            box-shadow: 0 8px 20px var(--glass-glow);
+            outline: none;
+        }
+
+        /* Sections inside card */
+        .section {
+            width: 100%;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .section-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 8px;
+        }
+
+        /* Progress Bars */
+        .progress-item {
+            margin-bottom: 16px;
+        }
+
+        .progress-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+        .progress-track {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 100px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+        }
+
+        body.light .progress-track {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--accent-gradient);
+            border-radius: 100px;
+            width: 0;
+            transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Interests Tags */
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tag {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--glass-border);
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            transition: var(--transition);
+            cursor: default;
+        }
+
+        body.light .tag {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        .tag:hover {
+            transform: scale(1.05);
+            border-color: var(--accent-color);
+            background: rgba(59, 130, 246, 0.08);
+            box-shadow: 0 4px 12px var(--glass-glow);
+        }
+
+        /* Contact Link */
+        .email-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 4px;
+            margin-bottom: 16px;
+        }
+
+        .email-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            border: 1px solid var(--glass-border);
+            padding: 8px 16px;
+            border-radius: 100px;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        body.light .email-link {
+            background: rgba(0, 0, 0, 0.02);
+            color: var(--text-secondary);
+        }
+
+        .email-link:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-color);
+            background: rgba(59, 130, 246, 0.08);
+            color: var(--text-primary);
+            box-shadow: 0 4px 12px var(--glass-glow);
+        }
+
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            color: var(--text-secondary);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            outline: none;
+            position: relative;
+        }
+
+        body.light .copy-btn {
+            background: rgba(0, 0, 0, 0.02);
+            color: var(--text-secondary);
+        }
+
+        .copy-btn:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-color);
+            background: rgba(59, 130, 246, 0.08);
+            color: var(--text-primary);
+            box-shadow: 0 4px 12px var(--glass-glow);
+        }
+
+        .copy-btn:active {
+            transform: translateY(0) scale(0.95);
+        }
+
+        /* Copy Tooltip */
+        .copy-btn::after {
+            content: "Copy Email";
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%) translateY(5px);
+            background: rgba(15, 23, 42, 0.95);
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .copy-btn:hover::after {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .copy-btn.copied::after {
+            content: "Copied!";
+            background: #10b981;
+            border-color: rgba(16, 185, 129, 0.2);
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Responsive adaptations */
+        @media (max-width: 480px) {
+            .glass-card {
+                padding: 24px;
+            }
+            .name {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Floating Background Graphic Elements -->
+    <div class="bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+    </div>
+
+    <!-- Theme Switch Toggle Button -->
+    <button class="theme-btn" id="theme-toggle">Theme ◑</button>
+
+    <!-- Glassmorphic Card Container -->
+    <div class="glass-card">
+        
+        <!-- Avatar Wrapper -->
+        <div class="avatar-container">
+            <img src="avatar.jpg" alt="Profile Avatar" class="profile-avatar" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'100\'><rect width=\'100\' height=\'100\' fill=\'url(%23g)\'/><defs><linearGradient id=\'g\' x1=\'0%25\' y1=\'0%25\' x2=\'100%25\' y2=\'100%25\'><stop offset=\'0%25\' stop-color=\'%233b82f6\'/><stop offset=\'100%25\' stop-color=\'%2360a5fa\'/></linearGradient></defs></svg>'">
+            <div class="avatar-glow"></div>
+        </div>
+
+        <!-- Name & Tagline -->
+        <h1 class="name">Winson Wu</h1>
+        
+        <!-- Email Area -->
+        <div class="email-container">
+            <a href="mailto:winson.wu@example.com" class="email-link">
+                <span>📧</span>
+                <span>winson.wu@example.com</span>
+            </a>
+            <button class="copy-btn" id="copy-email-btn" title="Copy Email">📋</button>
+        </div>
+        
+        <p class="tagline">Learning to build things with AI</p>
+
+        <!-- Social Icons Row -->
+        <div class="social-row">
+            <a href="https://github.com" target="_blank" class="social-link" title="GitHub">💻</a>
+            <a href="https://linkedin.com" target="_blank" class="social-link" title="LinkedIn">👔</a>
+            <a href="https://twitter.com" target="_blank" class="social-link" title="Twitter">🐦</a>
+        </div>
+
+        <!-- Progress Section -->
+        <div class="section">
+            <h2 class="section-title">Currently Learning</h2>
+            
+            <div class="progress-item">
+                <div class="progress-labels">
+                    <span>🤖 AI Prompting &amp; Agents</span>
+                    <span>85%</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-bar" data-val="85%"></div>
+                </div>
+            </div>
+
+            <div class="progress-item">
+                <div class="progress-labels">
+                    <span>🎨 Modern Frontend (CSS/HTML)</span>
+                    <span>65%</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-bar" data-val="65%"></div>
+                </div>
+            </div>
+
+            <div class="progress-item">
+                <div class="progress-labels">
+                    <span>⚡ Network Automation (Python)</span>
+                    <span>40%</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-bar" data-val="40%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interests Section -->
+        <div class="section" style="margin-bottom: 0;">
+            <h2 class="section-title">Interests</h2>
+            <div class="tags-container">
+                <span class="tag">🤖 Artificial Intelligence</span>
+                <span class="tag">🕸️ Enterprise Networks</span>
+                <span class="tag">☁️ Cloud Hybrid Architecture</span>
+                <span class="tag">🐍 Python Scripts</span>
+                <span class="tag">🎨 UI/UX Materials</span>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Theme toggle logic
+            const themeToggle = document.getElementById('theme-toggle');
+            const body = document.body;
+
+            // Load saved theme preference
+            const savedTheme = localStorage.getItem('theme-portfolio') || 'dark';
+            if (savedTheme === 'light') {
+                body.classList.add('light');
+            }
+
+            themeToggle.addEventListener('click', () => {
+                body.classList.toggle('light');
+                const currentTheme = body.classList.contains('light') ? 'light' : 'dark';
+                localStorage.setItem('theme-portfolio', currentTheme);
+            });
+
+            // Smooth Load animation for progress bars
+            const progressBars = document.querySelectorAll('.progress-bar');
+            
+            // Trigger animation shortly after load to allow rendering
+            setTimeout(() => {
+                progressBars.forEach(bar => {
+                    const targetWidth = bar.getAttribute('data-val');
+                    bar.style.width = targetWidth;
+                });
+            }, 300);
+
+            // Copy email to clipboard logic
+            const copyEmailBtn = document.getElementById('copy-email-btn');
+            if (copyEmailBtn) {
+                copyEmailBtn.addEventListener('click', () => {
+                    const emailText = 'winson.wu@example.com';
+                    navigator.clipboard.writeText(emailText).then(() => {
+                        copyEmailBtn.textContent = '✅';
+                        copyEmailBtn.classList.add('copied');
+                        setTimeout(() => {
+                            copyEmailBtn.textContent = '📋';
+                            copyEmailBtn.classList.remove('copied');
+                        }, 2000);
+                    }).catch(err => {
+                        console.error('Failed to copy text: ', err);
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
