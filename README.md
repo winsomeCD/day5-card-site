@@ -1,1 +1,1 @@
-Personal card
+Pernal card
